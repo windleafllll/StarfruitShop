@@ -6,8 +6,8 @@ import { ref } from 'vue'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
 import CategoryPanel from './components/CategoryPanel.vue'
 import HotPanel from './components/HotPanel.vue'
-import type { YtxxGuessInstance } from '@/types/components'
 import PageSkeleton from './components/PageSkeleton.vue'
+import { useGuessList } from '@/composables'
 
 const bannerList = ref<BannerItem[]>([])
 
@@ -39,12 +39,14 @@ onLoad(async () => {
   await Promise.all([getHomeBannerData(), getHomeCategoryData(), getHomeHotBannerData()])
   isLoading.value = false
 })
-//获取组件实例
-const guessRef = ref<YtxxGuessInstance>()
-//滑动触底触发
-const onScorlltolower = () => {
-  guessRef.value?.getMore()
-}
+
+const { guessRef, onScrolltolower } = useGuessList()
+// //获取组件实例
+// const guessRef = ref<YtxxGuessInstance>()
+// //滑动触底触发
+// const onScrolltolower = () => {
+//   guessRef.value?.getMore()
+// }
 
 const isTriggered = ref(false)
 
@@ -70,7 +72,7 @@ const onrefresherrefresh = async () => {
     refresher-enabled
     @refresherrefresh="onrefresherrefresh"
     :refresher-triggered="isTriggered"
-    @scrolltolower="onScorlltolower"
+    @scrolltolower="onScrolltolower"
     class="scorll-view"
     scroll-y
   >
